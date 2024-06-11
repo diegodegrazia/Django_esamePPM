@@ -7,10 +7,22 @@
 <div class="row">
   <div class="col-12 card">
     <div class="card-body">
-      <h1>{{ post.title }}</h1>
+      <h1 style="color:#BA0021">{{ post.title }}</h1>
       <p class=" text-muted">{{ post.author }} | {{ post.created_on }}</p>
       <p class="card-text">{{ post.content }}</p>
     </div>
+    <h2 style="color: #1CAC78">Comments:</h2>
+    {% if not post.post_comments.all %}
+      <h4>No comments yet, add one!</h4>
+    {% else %}
+      {% for comment in post.post_comments.all %}
+        <strong>{{ comment.author }} | {{ comment.created_on }}</strong>
+        <br/>
+        {{ comment.content }}
+        <br/><br/>
+        <hr>
+      {% endfor %}
+    {% endif %}
   </div>
 </div>
 

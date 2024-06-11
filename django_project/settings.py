@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms',
     'App',
     'accounts',
 ]
@@ -120,6 +119,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 MEDIA_URL = 'images/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR / 'App', 'static'),)
 
@@ -127,3 +127,4 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR / 'App', 'static'),)
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

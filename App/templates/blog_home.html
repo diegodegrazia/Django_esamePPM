@@ -1,29 +1,30 @@
 {% extends "base.html" %}
 
 {% block log_alert %}
-  {% if user.is_authenticated %}
-    <h4 class="mb-5"><strong>Welcome {{ user.username }}</strong></h4>
-  {% else %}
+  {% if not user.is_authenticated %}
     <h4 class="mb-5"><strong>You are not logged in</strong></h4>
   {% endif %}
 {% endblock %}
 
-{% block title %} Latest Blogs {% endblock %}
+{% block title %} Latest Posts {% endblock %}
 
 {% block content %}
 <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1">
-  {% for blog in blog_list %}
+  {% for post in posts %}
   <div class="card mb-4">
     <div class="bg-image hover-overlay" data-mdb-ripple-init data-mdb-ripple-color="light">
       <img src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" class="img-fluid" />
-      <a href="{% url 'blog_home' blog.name %}">
+      <a href="{% url 'post_details' post.slug %}">
         <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
       </a>
     </div>
     <div class="card-body">
-      <h5 class="card-title">{{ blog.name }}</h5>
-      <p class="card-text text-muted h6">{{ blog.author }} | {{ blog.created_on}} </p>
-      <a href="{% url 'blog_home' blog.name %}" class="btn btn-primary" data-mdb-ripple-init>Visit</a>
+      <h5 class="card-title">{{ post.title }}</h5>
+      <p class="card-text">
+        {{ post.content|slice:":200"}}
+      </p>
+      <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
+      <a href="{% url 'post_details' post.slug %}" class="btn btn-primary" data-mdb-ripple-init>Read</a>
     </div>
   </div>
   {% endfor %}

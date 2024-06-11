@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Post
+from .models import Post, Blog
 from django.views import generic
 from django.shortcuts import get_object_or_404
 
@@ -9,14 +9,20 @@ def index(request):
     return render(request, template)
 
 
-# Vista che mi restituisce una lista di post pubblicati
-# ed in ordine di creazione, dal più recente al più vecchio.
-class PostList(generic.ListView):
-    queryset = Post.objects.filter(status=1).order_by('-created_on')
+class BlogList(generic.ListView):
+    queryset = Blog.objects.order_by('-created_on')
     template_name = 'index.html'
 
 
-# Vista che mi fa visualizzare tutto il contenuto del post se clicco "read".
+def post_list(request, blog_name):
+    blog = get_object_or_404(Blog, name=blog_name)
+    posts = Post.objects.filter(blog=blog).order_by('-created_on')
+    context = {
+        'blog': blog,
+        'posts': posts
+    }
+    return render(request, 'blog_home.html', context)
+
 
 def postDetails(request, post):
     post = get_object_or_404(Post, slug=post)

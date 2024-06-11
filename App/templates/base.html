@@ -7,7 +7,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>My Blog</title>
+    <title>Blog platform</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css" />
     <!-- Google Fonts Roboto -->
@@ -18,32 +18,32 @@
 <body style="padding-top:35px;">
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
-      <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-mdb-collapse-init data-mdb-target="#navbarExample01"
-          aria-controls="navbarExample01" aria-expanded="false" aria-label="Toggle navigation">
-          <i class="fas fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarExample01">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item active">
-              <a class="nav-link" aria-current="page" href="{% url 'home' %}">Home</a>
-            </li>
-            {% if user.is_authenticated %}
-                <li class="nav-item">
-                  <a class="nav-link" href="#" target="_self">Log out</a>
+          <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-mdb-collapse-init data-mdb-target="#navbarExample01"
+              aria-controls="navbarExample01" aria-expanded="false" aria-label="Toggle navigation">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarExample01">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item active">
+                  <a class="nav-link" aria-current="page" href="{% url 'home' %}">Home</a>
                 </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="#" target="_self">Register</a>
-                </li>
-              <li class="nav-item">
-                    <a class="nav-link" href="/accounts/login" target="_self">Log in</a>
-              </li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </nav>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'logout' %}" target="_self">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}" target="_self">Register</a>
+                    </li>
+                  <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}" target="_self">Log in</a>
+                  </li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </nav>
     </header>
 
   <main class="my-5">
