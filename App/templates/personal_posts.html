@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block main-title %} My posts {% endblock %}
+
+{% block content-management %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'my_posts' blog.name user.username %}" target="_self">My posts</a>
+  </li>
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'add_post' blog.name %}" target="_self">Add post</a>
+</li>
+{% endblock %}
+
+{% block title %} My Posts {% endblock %}
+
+{% block content %}
+  <h2 style="color:#BA0021"><strong>Drafted posts</strong></h2>
+  <br/>
+  <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1">
+    {% for post in postDrafted %}
+    <div class="card mb-4">
+      <div class="bg-image hover-overlay" data-mdb-ripple-init data-mdb-ripple-color="light">
+        <img src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" class="img-fluid" />
+        <a href="{% url 'post_details' blog.name post.slug %}">
+          <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+        </a>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">{{ post.title }}</h5>
+        <p class="card-text">
+          {{ post.content|slice:":200"}}
+        </p>
+        <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
+        <a href="{% url 'post_details' blog.name post.slug %}" class="btn btn-primary" data-mdb-ripple-init>Read</a>
+        {% if user.is_authenticated and post.author == user %}
+          <div style="margin-top: 5px;">
+            <a href="{% url 'edit_post' blog.name post.slug %}" class="btn btn-primary" data-mdb-ripple-init>Edit</a>
+            <a href="{% url 'delete_post' blog.name post.slug %}" class="btn btn-primary" data-mdb-ripple-init>Delete</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <hr>
+
+  <h2 style="color:#BA0021"><strong>Published posts</strong></h2>
+  <br/>
+  <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1">
+    {% for post in postPublished %}
+    <div class="card mb-4">
+      <div class="bg-image hover-overlay" data-mdb-ripple-init data-mdb-ripple-color="light">
+        <img src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" class="img-fluid" />
+        <a href="{% url 'post_details' blog.name post.slug %}">
+          <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+        </a>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">{{ post.title }}</h5>
+        <p class="card-text">
+          {{ post.content|slice:":200"}}
+        </p>
+        <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
+        <a href="{% url 'post_details' blog.name post.slug %}" class="btn btn-primary" data-mdb-ripple-init>Read</a>
+        {% if user.is_authenticated and post.author == user %}
+          <div style="margin-top: 5px;">
+            <a href="{% url 'edit_post' blog.name post.slug %}" class="btn btn-primary" data-mdb-ripple-init>Edit</a>
+            <a href="{% url 'delete_post' blog.name post.slug %}" class="btn btn-primary" data-mdb-ripple-init>Delete</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% endblock %}

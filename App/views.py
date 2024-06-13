@@ -12,14 +12,41 @@ def index(request):
     return render(request, template)
 
 
-class BlogList(generic.ListView):
+class BlogListView(generic.ListView):
     queryset = Blog.objects.order_by('-created_on')
     template_name = 'index.html'
 
 
+class PersonalBlogListView(generic.ListView):
+    template_name = 'index.html'
+
+    def get_queryset(self):
+        queryset = Blog.objects.filter(author=self.request.user).order_by('-created_on')
+        return queryset
+
+
+class PersonalPostListView(generic.ListView):
+    template_name = 'personal_posts.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        blog_name = self.kwargs['blog_name']
+        return Post.objects.filter(author__username=username, blog__name=blog_name).order_by('-created_on')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        username = self.kwargs['username']
+        blog_name = self.kwargs['blog_name']
+        context['blog'] = get_object_or_404(Blog, name=blog_name)
+        context['postDrafted'] = Post.objects.filter(author__username=username, blog__name=blog_name, status=0).order_by('-created_on')
+        context['postPublished'] = Post.objects.filter(author__username=username, blog__name=blog_name, status=1).order_by('-created_on')
+        return context
+
+
 def post_list(request, blog_name):
     blog = get_object_or_404(Blog, name=blog_name)
-    posts = Post.objects.filter(blog=blog).order_by('-created_on')
+    posts = Post.objects.filter(blog=blog, status=1).order_by('-created_on')
     context = {
         'blog': blog,
         'posts': posts

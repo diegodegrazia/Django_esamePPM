@@ -50,9 +50,11 @@
         <hr>
       {% endfor %}
     {% endif %}
-    <a href="{% url 'add_comment' blog.name post.slug %}">
-      <button class="btn btn-primary rounded" type="button">Add comment</button>
-    </a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'add_comment' blog.name post.slug %}">
+        <button class="btn btn-primary rounded" type="button">Add comment</button>
+      </a>
+    {% endif %}
     <br/>
   </div>
 </div>

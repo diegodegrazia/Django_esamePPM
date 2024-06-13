@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block main-title %} Blog platform {% endblock %}
+{% block main-title %} Blog home {% endblock %}
 
 {% block content-management %}
   <li class="nav-item">
-    <a class="nav-link" href="#" target="_self">My blogs</a>
+    <a class="nav-link" href="{% url 'my_blogs' user.username %}" target="_self">My blogs</a>
   </li>
 <li class="nav-item">
   <a class="nav-link" href="{% url 'add_blog' %}" target="_self">Add blog</a>
@@ -19,7 +19,7 @@
   {% endif %}
 {% endblock %}
 
-{% block title %} Latest Blogs {% endblock %}
+{% block title %} <h2 style="color:#BA0021"><strong>Latest blogs</strong></h2> {% endblock %}
 
 {% block content %}
 <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1">
