@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 
+{% block main-title %} Blog platform {% endblock %}
+
+{% block content-management %}
+  <li class="nav-item">
+    <a class="nav-link" href="#" target="_self">My blogs</a>
+  </li>
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'add_blog' %}" target="_self">Add blog</a>
+</li>
+{% endblock %}
+
 {% block log_alert %}
   {% if user.is_authenticated %}
     <h4 class="mb-5"><strong>Welcome {{ user.username }}</strong></h4>
@@ -24,6 +35,10 @@
       <h5 class="card-title">{{ blog.name }}</h5>
       <p class="card-text text-muted h6">{{ blog.author }} | {{ blog.created_on}} </p>
       <a href="{% url 'blog_home' blog.name %}" class="btn btn-primary" data-mdb-ripple-init>Visit</a>
+      {% if user.is_authenticated and blog.author == user %}
+        <a href="{% url 'edit_blog' blog.slug %}" class="btn btn-primary" data-mdb-ripple-init>Edit</a>
+        <a href="{% url 'delete_blog' blog.slug %}" class="btn btn-primary" data-mdb-ripple-init>Delete</a>
+      {% endif %}
     </div>
   </div>
   {% endfor %}

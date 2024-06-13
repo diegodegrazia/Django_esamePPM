@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block main-title %} Blog platform {% endblock %}
+
+{% block title %} Delete post {% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <h2>Do you want to delete "{{ post.title }}?"</h2>
+        <button class="btn btn-primary">Delete</button>
+    </form>
+{% endblock %}

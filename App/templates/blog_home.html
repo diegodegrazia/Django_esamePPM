@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 
+{% block main-title %} Blog posts {% endblock %}
+
+{% block content-management %}
+  <li class="nav-item">
+    <a class="nav-link" href="#" target="_self">My posts</a>
+  </li>
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'add_post' blog.name %}" target="_self">Add post</a>
+</li>
+{% endblock %}
+
 {% block log_alert %}
   {% if not user.is_authenticated %}
     <h4 class="mb-5"><strong>You are not logged in</strong></h4>
@@ -14,7 +25,7 @@
   <div class="card mb-4">
     <div class="bg-image hover-overlay" data-mdb-ripple-init data-mdb-ripple-color="light">
       <img src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" class="img-fluid" />
-      <a href="{% url 'post_details' post.slug %}">
+      <a href="{% url 'post_details' blog.name post.slug %}">
         <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
       </a>
     </div>
@@ -24,7 +35,13 @@
         {{ post.content|slice:":200"}}
       </p>
       <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
-      <a href="{% url 'post_details' post.slug %}" class="btn btn-primary" data-mdb-ripple-init>Read</a>
+      <a href="{% url 'post_details' blog.name post.slug %}" class="btn btn-primary" data-mdb-ripple-init>Read</a>
+      {% if user.is_authenticated and post.author == user %}
+        <div style="margin-top: 5px;">
+          <a href="{% url 'edit_post' blog.name post.slug %}" class="btn btn-primary" data-mdb-ripple-init>Edit</a>
+          <a href="{% url 'delete_post' blog.name post.slug %}" class="btn btn-primary" data-mdb-ripple-init>Delete</a>
+        </div>
+      {% endif %}
     </div>
   </div>
   {% endfor %}
