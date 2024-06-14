@@ -4,7 +4,7 @@
 
 {% block content-management %}
   <li class="nav-item">
-    <a class="nav-link" href="#" target="_self">My posts</a>
+    <a class="nav-link" href="{% url 'my_posts' blog.name user.username %}" target="_self">My posts</a>
   </li>
 <li class="nav-item">
   <a class="nav-link" href="{% url 'add_post' blog.name %}" target="_self">Add post</a>

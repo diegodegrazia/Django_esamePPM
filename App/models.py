@@ -22,14 +22,22 @@ class Blog(models.Model):
 
 
 class Post(models.Model):
-    title = models.CharField(max_length=200, unique=True)
-    slug = models.SlugField(max_length=200, unique=True)
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_blog_posts")
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name="blog_posts")
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     content = models.TextField()
     status = models.IntegerField(choices=STATUS, default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['blog', 'title'], name='unique_title_per_blog',
+                                    violation_error_message="Title already used in this blog."),
+            models.UniqueConstraint(fields=['blog', 'slug'], name='unique_slug_per_blog',
+                                    violation_error_message="Slug already used in this blog."),
+        ]
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)

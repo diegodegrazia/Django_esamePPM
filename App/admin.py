@@ -13,10 +13,10 @@ class BlogAdmin(admin.ModelAdmin):
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug', 'created_on', 'updated_on')
+    list_display = ('title', 'slug', 'blog', 'created_on', 'updated_on')
     list_filter = ('status', 'created_on',)
     search_fields = ['title', 'slug', 'content']
-    fields = ['title', 'author', 'blog', 'content']
+    fields = ['title', 'author', 'blog', 'content', 'status']
 
 
 class CommentAdmin(admin.ModelAdmin):

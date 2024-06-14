@@ -1,3 +1,5 @@
+
+from django.db import IntegrityError
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView
@@ -56,7 +58,7 @@ def post_list(request, blog_name):
 
 def postDetails(request, blog_name, slug):
     blog = get_object_or_404(Blog, name=blog_name)
-    post = get_object_or_404(Post, slug=slug)
+    post = get_object_or_404(Post, slug=slug, blog=blog)
     return render(request, 'post_detail.html', {"blog": blog, "post": post})
 
 
@@ -99,10 +101,18 @@ class AddPost(CreateView):
     # bisogno perché al campo è già stato dato un valore.
 
     def form_valid(self, form):
-        blog = get_object_or_404(Blog, name=self.kwargs['blog_name'])
-        form.instance.blog = blog
-        form.instance.author = self.request.user
-        return super().form_valid(form)
+        try:
+            blog = get_object_or_404(Blog, name=self.kwargs['blog_name'])
+            form.instance.blog = blog
+            form.instance.author = self.request.user
+            return super().form_valid(form)
+        except IntegrityError as e:
+            # Cerca i messaggi di violazione dei vincoli nel testo dell'eccezione
+            if 'unique_title_per_blog' in str(e):
+                form.add_error('title', "Title already used in this blog.")
+            if 'unique_slug_per_blog' in str(e):
+                form.add_error('slug', "Slug already used in this blog.")
+            return self.form_invalid(form)
 
 
 class EditPost(UpdateView):
@@ -113,6 +123,24 @@ class EditPost(UpdateView):
     def get_success_url(self):
         return reverse_lazy('blog_home', kwargs={'blog_name': self.object.blog.name})
 
+    # get_queryset() e get_object() servono per non rompere lo uniqueConstraint di Post
+    def get_queryset(self):
+        return Post.objects.filter(blog__name=self.kwargs['blog_name'])
+
+    def get_object(self, queryset=None):
+        queryset = self.get_queryset()
+        return get_object_or_404(queryset, slug=self.kwargs['slug'])
+
+    def form_valid(self, form):
+        try:
+            return super().form_valid(form)
+        except IntegrityError as e:
+            if 'unique_title_per_blog' in str(e):
+                form.add_error('title', "Title already used in this blog.")
+            if 'unique_slug_per_blog' in str(e):
+                form.add_error('slug', "Slug already used in this blog.")
+            return self.form_invalid(form)
+
 
 class PostDeleteView(DeleteView):
     model = Post
@@ -120,6 +148,14 @@ class PostDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('blog_home', kwargs={'blog_name': self.object.blog.name})
+
+    # get_queryset() e get_object() servono per non rompere lo uniqueConstraint di Post
+    def get_queryset(self):
+        return Post.objects.filter(blog__name=self.kwargs['blog_name'])
+
+    def get_object(self, queryset=None):
+        queryset = self.get_queryset()
+        return get_object_or_404(queryset, slug=self.kwargs['slug'])
 
 
 class AddComment(CreateView):
@@ -135,7 +171,7 @@ class AddComment(CreateView):
     # comment.post al relativo post in cui mi trovo. L'edit o il delete non ne hanno
     # bisogno perché al campo è già stato dato un valore.
     def form_valid(self, form):
-        post = get_object_or_404(Post, slug=self.kwargs['slug'])
+        post = get_object_or_404(Post, slug=self.kwargs['slug'], blog__name=self.kwargs['blog_name'])
         form.instance.post = post
         form.instance.author = self.request.user
         return super().form_valid(form)
