@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from .forms import UserAuthenticationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib import messages
 from .forms import CustomUserCreationForm
 
@@ -22,3 +22,8 @@ def register(request):
 class UserLoginView(LoginView):
     authentication_form = UserAuthenticationForm
     template_name = 'login.html'
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('home')
