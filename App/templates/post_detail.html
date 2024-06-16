@@ -30,19 +30,19 @@
     {% else %}
       {% for comment in post.post_comments.all %}
         <article class="row row-cols-3 align-items-center" style="display:flex;">
-          <div class="col col-8">
+          <div class="col col-lg-8 col-sm-6">
             <div><strong>{{ comment.author }} | {{ comment.updated_on }}</strong></div>
             <div>{{ comment.content }}</div>
           </div>
           {% if user.is_authenticated and comment.author == user %}
-            <div class="col col-2">
+            <div class="col col-lg-2 col-sm-3">
               <a href="{% url 'edit_comment' blog.name post.slug comment.pk %}">
-                <button class="btn btn-primary rounded" type="button">Edit comment</button>
+                <button class="btn btn-primary rounded w-100" type="button">Edit comment</button>
               </a>
             </div>
-            <div class="col col-2">
+            <div class="col col-lg-2 col-sm-3">
               <a href="{% url 'delete_comment' blog.name post.slug comment.pk %}">
-                <button class="btn btn-primary rounded" type="button">Delete comment</button>
+                <button class="btn btn-primary rounded w-100" type="button">Delete comment</button>
               </a>
             </div>
           {% endif %}
